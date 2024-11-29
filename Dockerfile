@@ -22,3 +22,5 @@ RUN pipx install pgcli && pipx ensurepath
 
 # Add /usr/lib/postgresql/16/bin to PATH for the postgres user
 RUN echo 'export PATH=$PATH:/usr/lib/postgresql/16/bin' >> $HOME/.profile
+
+ENV PGBACKREST_STANZA=test
