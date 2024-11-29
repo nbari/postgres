@@ -4,6 +4,9 @@ set shell := ["zsh", "-uc"]
 uid := `id -u`
 gid := `id -g`
 
+# Set the PGDATA directory
+pgdata := "/db/16"
+
 run: build
   mkdir -p db/log/{postgres,pgbackrest}
   mkdir -p config
@@ -11,7 +14,7 @@ run: build
   podman run --rm --name postgres \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=secret \
-  -e PGDATA=/db/16 \
+  -e PGDATA={{ pgdata }} \
   -p 5432:5432 \
   -v $(pwd)/db:/db \
   -v $(pwd)/config/postgres:/etc/postgresql/config \
@@ -20,8 +23,7 @@ run: build
   --user {{ uid }}:{{ gid }} \
   --userns keep-id:uid=999,gid=999 \
   --user 999:999 \
-  postgres-with-pgbackrest postgres \
-  -c config_file=/etc/postgresql/config/postgresql.conf
+  postgres-with-pgbackrest entrypoint.sh
 
 build:
   podman build -t postgres-with-pgbackrest .
@@ -31,3 +33,6 @@ stanza:
 
 enter: stanza
   podman exec -it postgres bash
+
+stop:
+  podman stop postgres
