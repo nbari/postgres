@@ -3,10 +3,22 @@ FROM postgres:16
 
 # Install pgBackRest and dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    netcat-openbsd \
     pgbackrest \
-    pgcli \
+    pipx \
+    procps \
+    sudo \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /pgbackrest
+# Allow the postgres user to be a sudoer
+RUN echo "postgres ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-RUN chown -R postgres:postgres /pgbackrest
+# switch to the postgres user
+USER postgres
+
+# Install pgcli via pipx
+RUN pipx install pgcli && pipx ensurepath
+
+# Add /usr/lib/postgresql/16/bin to PATH for the postgres user
+RUN echo 'export PATH=$PATH:/usr/lib/postgresql/16/bin' >> $HOME/.profile
