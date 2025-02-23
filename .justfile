@@ -5,7 +5,7 @@ uid := `id -u`
 gid := `id -g`
 
 # Set the PGDATA directory
-pgdata := "/db/16"
+pgdata := "/db/17"
 
 run: build
   mkdir -p db/log/{postgres,pgbackrest}

@@ -1,5 +1,5 @@
 # Start with the official PostgreSQL image
-FROM postgres:16
+FROM postgres:17
 
 # Install pgBackRest and dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -21,8 +21,8 @@ USER postgres
 # Install pgcli via pipx
 RUN pipx install pgcli && pipx ensurepath
 
-# Add /usr/lib/postgresql/16/bin to PATH for the postgres user
-RUN echo 'export PATH=$PATH:/usr/lib/postgresql/16/bin' >> $HOME/.profile
+# Add /usr/lib/postgresql/17/bin to PATH for the postgres user
+RUN echo 'export PATH=$PATH:/usr/lib/postgresql/17/bin' >> $HOME/.profile
 
 ENV PGBACKREST_STANZA=test
 
